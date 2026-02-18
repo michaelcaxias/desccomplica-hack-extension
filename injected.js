@@ -182,97 +182,105 @@
                 alt.style.removeProperty('box-shadow');
             });
 
-            // Strategy A: Text-based match
-            for (let [assertionId, info] of assertionDataMap.entries()) {
-                if (!correctAssertionIds.has(assertionId)) continue;
+            // Helper: extract words for fuzzy question-text matching
+            const extractWords = (str) => {
+                const cleaned = str
+                    .replace(/\\[a-zA-Z]+(\{[^}]*\})?/g, ' ')
+                    .replace(/[{}\\]/g, ' ');
+                return (cleaned.match(/[a-zA-ZÀ-ÿ]{3,}/g) || []).map(w => w.toLowerCase());
+            };
 
-                const targetText = normalize(stripHtml(info.text));
-                if (!targetText) continue;
+            const pageText = normalize(document.body.innerText).toLowerCase();
 
-                for (let alt of alternatives) {
-                    const altText = normalize(alt.innerText);
-                    if (altText.includes(targetText) || targetText.includes(altText)) {
-                        console.log('%c[Descomplica Extension] ✔ CORRECT ANSWER (text match):', 'color: #00e676; font-size: 16px; font-weight: bold;', altText);
-                        alt.style.border = '3px solid #00e676';
-                        alt.style.backgroundColor = 'rgba(0, 230, 118, 0.12)';
-                        alt.style.boxShadow = '0 0 12px rgba(0, 230, 118, 0.3)';
-                        found = true;
+            // Score each group to find the one matching the current page
+            let bestGroup = null;
+            let bestScore = -1;
+
+            for (let group of questionGroups) {
+                if (group.assertions.length !== alternatives.length) continue;
+
+                // Must have at least one correct assertion
+                const correctInGroup = group.assertions.filter(a => correctAssertionIds.has(a.id));
+                if (correctInGroup.length === 0) continue;
+
+                let score = 0;
+
+                // Score method 1: Count how many assertions text-match an alternative
+                let textMatches = 0;
+                for (let assertion of group.assertions) {
+                    const aText = normalize(stripHtml(assertion.text));
+                    if (!aText || aText.length < 2) continue;
+                    for (let alt of alternatives) {
+                        const altText = normalize(alt.innerText);
+                        if (altText.includes(aText) || aText.includes(altText)) {
+                            textMatches++;
+                            break;
+                        }
                     }
+                }
+                score += textMatches * 10; // Weight text matches heavily
+
+                // Score method 2: Question-text word matching
+                if (group.questionText) {
+                    const qWords = extractWords(normalize(stripHtml(group.questionText)));
+                    if (qWords.length >= 3) {
+                        const wordMatches = qWords.filter(w => pageText.includes(w)).length;
+                        score += (wordMatches / qWords.length) * 50; // Up to 50 points for question text
+                    }
+                }
+
+                // Score method 3: Check if assertion IDs are in the DOM
+                for (let assertion of group.assertions) {
+                    for (let alt of alternatives) {
+                        if (alt.outerHTML.includes(assertion.id)) {
+                            score += 100; // Very strong signal
+                        }
+                    }
+                }
+
+                console.log(`[Descomplica Extension] Group score: ${score.toFixed(1)} (${textMatches} text matches, question: "${(group.questionText ? normalize(stripHtml(group.questionText)).substring(0, 50) : 'N/A')}...")`);
+
+                if (score > bestScore) {
+                    bestScore = score;
+                    bestGroup = group;
                 }
             }
 
-            // Strategy B: Fallback for math/LaTeX content
-            if (!found) {
-                console.log('[Descomplica Extension] Text match failed, trying fallback strategies...');
+            if (bestGroup && bestScore > 0) {
+                console.log(`[Descomplica Extension] Best group selected with score ${bestScore.toFixed(1)}`);
 
-                // B1: Search for assertion IDs in the DOM HTML of alternatives
-                for (let alt of alternatives) {
-                    const html = alt.outerHTML;
-                    for (let [assertionId] of assertionDataMap.entries()) {
-                        if (!correctAssertionIds.has(assertionId)) continue;
-                        if (html.includes(assertionId)) {
-                            console.log(`%c[Descomplica Extension] ✔ CORRECT ANSWER (ID in DOM: ${assertionId}):`, 'color: #00e676; font-size: 16px; font-weight: bold;', alt.innerText.trim().substring(0, 80));
-                            alt.style.border = '3px solid #00e676';
-                            alt.style.backgroundColor = 'rgba(0, 230, 118, 0.12)';
-                            alt.style.boxShadow = '0 0 12px rgba(0, 230, 118, 0.3)';
-                            found = true;
-                        }
-                    }
-                }
+                const correctInGroup = bestGroup.assertions.filter(a => correctAssertionIds.has(a.id));
 
-                // B2: Question-text based group identification + position matching
-                if (!found) {
-                    const pageText = normalize(document.body.innerText).toLowerCase();
+                for (let correct of correctInGroup) {
+                    // Try text match first (most precise)
+                    const targetText = normalize(stripHtml(correct.text));
+                    let matched = false;
 
-                    // Extract significant words (3+ chars, no LaTeX commands) for fuzzy matching
-                    const extractWords = (str) => {
-                        // Strip LaTeX commands first
-                        const cleaned = str
-                            .replace(/\\[a-zA-Z]+(\{[^}]*\})?/g, ' ')
-                            .replace(/[{}\\]/g, ' ');
-                        return (cleaned.match(/[a-zA-ZÀ-ÿ]{3,}/g) || []).map(w => w.toLowerCase());
-                    };
-
-                    let bestGroup = null;
-                    let bestScore = 0;
-
-                    for (let group of questionGroups) {
-                        if (group.assertions.length !== alternatives.length) continue;
-
-                        // Check if this group has any correct assertion
-                        const correctInGroup = group.assertions.filter(a => correctAssertionIds.has(a.id));
-                        if (correctInGroup.length === 0) continue;
-
-                        if (!group.questionText) continue;
-
-                        const qWords = extractWords(normalize(stripHtml(group.questionText)));
-                        if (qWords.length < 3) continue;
-
-                        const matchCount = qWords.filter(w => pageText.includes(w)).length;
-                        const score = matchCount / qWords.length;
-
-                        console.log(`[Descomplica Extension] Group question word match: ${matchCount}/${qWords.length} (${(score * 100).toFixed(0)}%) — "${qWords.slice(0, 6).join(' ')}..."`);
-
-                        if (score > bestScore) {
-                            bestScore = score;
-                            bestGroup = group;
-                        }
-                    }
-
-                    // Require at least 60% word match
-                    if (bestGroup && bestScore >= 0.6) {
-                        console.log(`[Descomplica Extension] Best group matched with ${(bestScore * 100).toFixed(0)}% word match.`);
-                        const correctInGroup = bestGroup.assertions.filter(a => correctAssertionIds.has(a.id));
-                        for (let correct of correctInGroup) {
-                            const idx = correct.position;
-                            if (idx >= 0 && idx < alternatives.length) {
-                                const alt = alternatives[idx];
-                                console.log(`%c[Descomplica Extension] ✔ CORRECT ANSWER (question match + position ${idx}):`, 'color: #00e676; font-size: 16px; font-weight: bold;', alt.innerText.trim().substring(0, 80));
+                    if (targetText) {
+                        for (let alt of alternatives) {
+                            const altText = normalize(alt.innerText);
+                            if (altText.includes(targetText) || targetText.includes(altText)) {
+                                console.log('%c[Descomplica Extension] ✔ CORRECT ANSWER (text match):', 'color: #00e676; font-size: 16px; font-weight: bold;', altText);
                                 alt.style.border = '3px solid #00e676';
                                 alt.style.backgroundColor = 'rgba(0, 230, 118, 0.12)';
                                 alt.style.boxShadow = '0 0 12px rgba(0, 230, 118, 0.3)';
                                 found = true;
+                                matched = true;
+                                break; // Only match one alternative per correct assertion
                             }
+                        }
+                    }
+
+                    // Fallback to position if text match failed
+                    if (!matched) {
+                        const idx = correct.position;
+                        if (idx >= 0 && idx < alternatives.length) {
+                            const alt = alternatives[idx];
+                            console.log(`%c[Descomplica Extension] ✔ CORRECT ANSWER (position ${idx}):`, 'color: #00e676; font-size: 16px; font-weight: bold;', alt.innerText.trim().substring(0, 80));
+                            alt.style.border = '3px solid #00e676';
+                            alt.style.backgroundColor = 'rgba(0, 230, 118, 0.12)';
+                            alt.style.boxShadow = '0 0 12px rgba(0, 230, 118, 0.3)';
+                            found = true;
                         }
                     }
                 }
