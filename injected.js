@@ -257,17 +257,32 @@
                     let matched = false;
 
                     if (targetText) {
+                        // Find the BEST matching alternative (highest similarity)
+                        let bestAlt = null;
+                        let bestSimilarity = 0;
+
                         for (let alt of alternatives) {
                             const altText = normalize(alt.innerText);
                             if (altText.includes(targetText) || targetText.includes(altText)) {
-                                console.log('%c[Descomplica Extension] ✔ CORRECT ANSWER (text match):', 'color: #00e676; font-size: 16px; font-weight: bold;', altText);
-                                alt.style.border = '3px solid #00e676';
-                                alt.style.backgroundColor = 'rgba(0, 230, 118, 0.12)';
-                                alt.style.boxShadow = '0 0 12px rgba(0, 230, 118, 0.3)';
-                                found = true;
-                                matched = true;
-                                break; // Only match one alternative per correct assertion
+                                // Score by length similarity (1.0 = exact match)
+                                const similarity = Math.min(altText.length, targetText.length) / Math.max(altText.length, targetText.length);
+                                if (similarity > bestSimilarity) {
+                                    bestSimilarity = similarity;
+                                    bestAlt = alt;
+                                }
                             }
+                        }
+
+                        // Only accept if similarity is high enough (reject bad substring matches)
+                        if (bestAlt && bestSimilarity >= 0.4) {
+                            console.log(`%c[Descomplica Extension] ✔ CORRECT ANSWER (text match, similarity ${bestSimilarity.toFixed(2)}):`, 'color: #00e676; font-size: 16px; font-weight: bold;', normalize(bestAlt.innerText));
+                            bestAlt.style.border = '3px solid #00e676';
+                            bestAlt.style.backgroundColor = 'rgba(0, 230, 118, 0.12)';
+                            bestAlt.style.boxShadow = '0 0 12px rgba(0, 230, 118, 0.3)';
+                            found = true;
+                            matched = true;
+                        } else if (bestAlt) {
+                            console.log(`[Descomplica Extension] Rejected text match (similarity ${bestSimilarity.toFixed(2)} < 0.4): "${normalize(bestAlt.innerText)}" — falling back to position.`);
                         }
                     }
 
