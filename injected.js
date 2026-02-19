@@ -281,6 +281,8 @@
                             bestAlt.style.boxShadow = '0 0 12px rgba(0, 230, 118, 0.3)';
                             found = true;
                             matched = true;
+                            bestAlt.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            bestAlt.click();
                         } else if (bestAlt) {
                             console.log(`[Descomplica Extension] Rejected text match (similarity ${bestSimilarity.toFixed(2)} < 0.4): "${normalize(bestAlt.innerText)}" — falling back to position.`);
                         }
@@ -485,7 +487,7 @@
 
     // Wait for body to be available
     function initUI() {
-        if (document.body) {
+        if (document.body && window.location.hostname.includes('aulas.descomplica.com.br')) {
             createUI();
         } else {
             const observer = new MutationObserver(() => {
