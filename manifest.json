@@ -5,12 +5,12 @@
     "description": "Intercepts request responses and logs decoded assertions.",
     "permissions": [],
     "host_permissions": [
-        "https://*/*"
+        "https://aulas.descomplica.com.br/*"
     ],
     "content_scripts": [
         {
             "matches": [
-                "https://*/*"
+                "https://aulas.descomplica.com.br/*"
             ],
             "js": [
                 "content.js"
@@ -24,7 +24,7 @@
                 "injected.js"
             ],
             "matches": [
-                "<all_urls>"
+                "https://aulas.descomplica.com.br/*"
             ]
         }
     ]
