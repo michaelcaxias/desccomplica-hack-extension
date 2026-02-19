@@ -487,7 +487,7 @@
 
     // Wait for body to be available
     function initUI() {
-        if (document.body && window.location.hostname.includes('aulas.descomplica.com.br')) {
+        if (document.body) {
             createUI();
         } else {
             const observer = new MutationObserver(() => {
