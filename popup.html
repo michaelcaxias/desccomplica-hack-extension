@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Descomplica Override</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            width: 250px;
+            padding: 15px;
+            margin: 0;
+            background-color: #f7f9fc;
+            color: #333;
+        }
+        h2 {
+            font-size: 16px;
+            margin-top: 0;
+            margin-bottom: 5px;
+            color: #11998e;
+        }
+        p {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        .option-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .option {
+            display: flex;
+            align-items: center;
+            background: #fff;
+            padding: 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            border: 1px solid #ddd;
+            transition: all 0.2s;
+        }
+        .option:hover {
+            border-color: #11998e;
+            background: #f0faf8;
+        }
+        .option input {
+            margin-right: 10px;
+            cursor: pointer;
+        }
+        .option label {
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .option small {
+            display: block;
+            color: #999;
+            font-size: 11px;
+            margin-left: 23px;
+            margin-top: 2px;
+        }
+        .warning {
+            font-size: 11px;
+            color: #d9534f;
+            margin-top: 15px;
+            text-align: center;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Descomplica Hack 🚀</h2>
+    <p>Escolha o motor de injeção de gabarito para os exercícios.</p>
+
+    <div class="option-group">
+        <div class="option">
+            <input type="radio" id="v2" name="engine" value="v2">
+            <div>
+                <label for="v2">V2 - VueJS Observer</label>
+                <small>Mais rápido. Clica e responde na hora. (Recomendado)</small>
+            </div>
+        </div>
+
+        <div class="option">
+            <input type="radio" id="v1" name="engine" value="v1">
+            <div>
+                <label for="v1">V1 - XHR Network</label>
+                <small>Intercepta as APIs (antigo, confiável mas visível no console).</small>
+            </div>
+        </div>
+
+        <div class="option">
+            <input type="radio" id="off" name="engine" value="off">
+            <div>
+                <label for="off">Desligar Extensão</label>
+                <small>Responde normalmente a plataforma.</small>
+            </div>
+        </div>
+    </div>
+
+    <div id="reload-warning" class="warning">
+        🔄 Favor recarregar a página (F5) para aplicar a mudança!
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+</html>

@@ -1,30 +1,28 @@
 {
     "manifest_version": 3,
-    "name": "Descomplica Response Interceptor",
-    "version": "1.0",
-    "description": "Intercepts request responses and logs decoded assertions.",
-    "permissions": [],
+    "name": "Sobrescrita Descomplica (V1 & V2)",
+    "version": "2.0",
+    "description": "Menu de alternância entre as táticas V1 (Network) e V2 (Design Patterns Vue)",
+    "permissions": [
+        "storage",
+        "scripting"
+    ],
     "host_permissions": [
-        "https://aulas.descomplica.com.br/*"
+        "*://aulas.descomplica.com.br/*"
     ],
-    "content_scripts": [
-        {
-            "matches": [
-                "https://aulas.descomplica.com.br/*"
-            ],
-            "js": [
-                "content.js"
-            ],
-            "run_at": "document_start"
-        }
-    ],
+    "background": {
+        "service_worker": "background.js"
+    },
+    "action": {
+        "default_popup": "popup.html"
+    },
     "web_accessible_resources": [
         {
             "resources": [
-                "injected.js"
+                "v1/injected.js"
             ],
             "matches": [
-                "https://aulas.descomplica.com.br/*"
+                "*://aulas.descomplica.com.br/*"
             ]
         }
     ]

@@ -1,0 +1,36 @@
+@keyframes green-gradient-border {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.question__alternative--correct-animated {
+    /* Tornamos a borda transparente para o background da borda aparecer */
+    border: 3px solid transparent !important;
+    border-radius: 8px !important;
+
+    /* Configura os fundos: o primeiro linear-gradient é a área interna (fundo interno), o segundo é reservado para o espaço da borda */
+    background:
+        linear-gradient(#ffffff, #ffffff) padding-box,
+        linear-gradient(90deg, #11998e, #38ef7d, #11998e, #38ef7d) border-box !important;
+    background-size: 300% 300% !important;
+
+    /* Aplica a animação infinita de pulo de gradiente */
+    animation: green-gradient-border 3s ease infinite !important;
+
+    /* Um pequeno sombreado para dar um efeito neon */
+    box-shadow: 0 0 10px rgba(56, 239, 125, 0.4) !important;
+
+    /* Força o texto e o color-fill à coloração esmeralda para dar match */
+    color: #11998e !important;
+}
+
+/* Caso a Descomplica use algum estilo global com dark mode, você pode ajustar o '#ffffff' acima. */
