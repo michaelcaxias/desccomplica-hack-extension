@@ -60,6 +60,13 @@ async function updateContentScripts(version) {
                 css: ["v2/styles.css"],
                 runAt: "document_end",
                 world: "MAIN"
+            },
+            {
+                id: "v2-bridge",
+                matches: ["*://aulas.descomplica.com.br/*"],
+                js: ["v2/isolated_bridge.js"],
+                runAt: "document_start",
+                world: "ISOLATED"
             }]);
             console.log("V2 (Vue Strategy Monkey Patch) Aplicado");
         } catch (e) { console.error('Erro ao injetar V2:', e); }

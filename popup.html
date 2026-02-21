@@ -145,6 +145,43 @@
             vertical-align: middle;
         }
 
+        .nested-checkbox {
+            margin-top: 10px;
+            margin-left: 0px;
+            display: flex;
+            align-items: center;
+            background: #e6f6f4;
+            padding: 8px 10px;
+            border-radius: 8px;
+            border: 1px solid #b2dfdb;
+            transition: 0.2s all;
+            display: none;
+        }
+
+        .option:has(input[type="radio"]:checked) .nested-checkbox {
+            display: flex;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .nested-checkbox input[type="checkbox"] {
+            appearance: auto;
+            -webkit-appearance: checkbox;
+            width: 16px;
+            height: 16px;
+            margin-right: 8px;
+            margin-top: 0;
+            cursor: pointer;
+            accent-color: #11998e;
+            border: none;
+        }
+
+        .nested-checkbox label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 0;
+        }
+
         .option small {
             display: block;
             color: #718096;
@@ -194,6 +231,11 @@
             <div class="option-content">
                 <label for="v2">Atual (Automático) <span class="badge-recommended">RECOMENDADO</span></label>
                 <small>Mais rápido. Lê e seleciona a resposta na hora para você.</small>
+
+                <div class="nested-checkbox">
+                    <input type="checkbox" id="auto-confirm" name="auto-confirm">
+                    <label for="auto-confirm">Auto-responder (Apenas Exercícios)</label>
+                </div>
             </div>
         </label>
 
@@ -201,7 +243,7 @@
             <input type="radio" id="v1" name="engine" value="v1">
             <div class="option-content">
                 <label for="v1">Legado (Manual)</label>
-                <small>Versão antiga de interceptação. Oferece controle visual via console.</small>
+                <small>Versão antiga de interceptação. Oferece controle manual via botão.</small>
             </div>
         </label>
 

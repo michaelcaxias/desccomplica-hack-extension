@@ -11,9 +11,9 @@ Temos dois motores disponíveis operando de formas distintas sobre o ecossistema
 ### 🌟 V2 - VueJS Observer (Recomendado)
 A nova e brilhante versão _monkey-patching_. Ela opera diretamente no **Virtual DOM do VueJS** interceptando as funções de UI do Front-End da plataforma, sem gerar volume pesado no terminal nativo de rede (Tab _Network_), deixando as requisições HTTPS e GraphQL seguirem normalmente e hackeando apenas a renderização dos componentes na tela do estudante.
 
-**Vantagens da V2:**
+**Vantagens do Modo Atual:**
 - **Invisível e Perfeito:** Injeta uma estilização CSS (Degradê Animado) suave.
-- **Auto-Select:** Após aplicar o destaque verde na interface de resposta certa, força um click temporal que marca o botão no rádio.
+- **Auto-Resposta Dinâmica:** Como um opcional apenas desse modo, após aplicar o destaque verde na interface de resposta certa nos questionários nativos (`DescoQuestions`), você pode optar por permitir a "Auto-Confirmação", fazendo a Extensão simular cliques contínuos pra você ("Responder" e "Próxima") engatando a marcha automática sobre as lições para otimização de tempo.
 - **Design Pattern:** Utiliza arquitetura Limpa e Isolada (_Strategy Factory_) cobrindo nativamente e sem quebras visuais 4 tipos de cenários Descomplica: `DescoQuestions` (Exercícios da aula), `RevisionQuestion` (Listas de Revisão), `ObjectiveTrivia` (Fixações Extras) e `ClozeQuestion` (Questões Lacunares de múltiplas opões de seleção Dropdown).
 
 ### 🕰️ V1 - XHR Network (Legacy)
