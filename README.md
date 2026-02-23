@@ -4,25 +4,8 @@ Esta extensão unificada foi construída para a plataforma Aulas Descomplica, of
 
 ---
 
-## ⚙️ Os Motores (Architectures)
+<img width="419" height="572" alt="image" src="https://github.com/user-attachments/assets/1d1fef99-dc6b-486a-877a-8d88f536f8e7" />
 
-Temos dois motores disponíveis operando de formas distintas sobre o ecossistema Descomplica. Escolha pelo Popup Menu:
-
-### 🌟 V2 - VueJS Observer (Recomendado)
-A nova e brilhante versão _monkey-patching_. Ela opera diretamente no **Virtual DOM do VueJS** interceptando as funções de UI do Front-End da plataforma, sem gerar volume pesado no terminal nativo de rede (Tab _Network_), deixando as requisições HTTPS e GraphQL seguirem normalmente e hackeando apenas a renderização dos componentes na tela do estudante.
-
-**Vantagens do Modo Atual:**
-- **Invisível e Perfeito:** Injeta uma estilização CSS (Degradê Animado) suave.
-- **Auto-Resposta Dinâmica:** Como um opcional apenas desse modo, após aplicar o destaque verde na interface de resposta certa nos questionários nativos (`DescoQuestions`), você pode optar por permitir a "Auto-Confirmação", fazendo a Extensão simular cliques contínuos pra você ("Responder" e "Próxima") engatando a marcha automática sobre as lições para otimização de tempo.
-- **Design Pattern:** Utiliza arquitetura Limpa e Isolada (_Strategy Factory_) cobrindo nativamente e sem quebras visuais 4 tipos de cenários Descomplica: `DescoQuestions` (Exercícios da aula), `RevisionQuestion` (Listas de Revisão), `ObjectiveTrivia` (Fixações Extras) e `ClozeQuestion` (Questões Lacunares de múltiplas opões de seleção Dropdown).
-
-### 🕰️ V1 - XHR Network (Legacy)
-O projeto inicial mais antigo de Interceptação Fina de Requisições. Ele opera na etapa antes de qualquer interface, bloqueando e ouvindo o motor do _Fetch/XHR API_ para o sub-domínio das URLs do servidor Descomplica.
-
-**Vantagens da V1:**
-- Escaneia requisições GraphQl via Injeção Raw DOM antes do script interno agir, e emite log rico detalhado para os Consoles. Confiável se houver profundas mudanças estruturais na interface do VueJS para o qual as Tags da V2 percam total aderência no futuro!
-
----
 
 ## 💻 Como Instalar (Modo Desenvolvedor)
 
@@ -48,3 +31,23 @@ Dentre as opções, ao ser selecionada o próprio `Service Worker` guardará a e
 - **Desligar Extensão:** Precisa "estudar na raça" sem precisar desligar a extensão indo até opções de browser? Selecionar esse menu faz o JavaScript da plataforma simplesmente não ser interrompido e você joga limpo de acordo com as regras triviais como se fosse uma conta convencional (Recomendamos ao checar aprendizado bruto após leitura teórica de PDFs dos tutoriais)!
 
 > **🚨 Aviso Importante ao Trocar de Versões:** As duas versões usam arquiteturas diferentes (V1 injeta na raíz antes do carregamento via mundo _ISOLATED_, e a V2 injeta no fechamento da documentação diretamente no _MAIN_ do site da Descomplica para agir no DOM já renderizado). Portanto, quando fizer uma seleção diferente no Popup Switcher, a mensagem subirá alertando que é **obrigatório atualizar a tela (F5)** atual do Descomplica de imediato para a troca do roteamento base se acomodar sem sobreposições ou quebras. 
+
+## ⚙️ Os Motores (Architectures)
+
+Temos dois motores disponíveis operando de formas distintas sobre o ecossistema Descomplica. Escolha pelo Popup Menu:
+
+### 🌟 V2 - VueJS Observer (Recomendado)
+A nova e brilhante versão _monkey-patching_. Ela opera diretamente no **Virtual DOM do VueJS** interceptando as funções de UI do Front-End da plataforma, sem gerar volume pesado no terminal nativo de rede (Tab _Network_), deixando as requisições HTTPS e GraphQL seguirem normalmente e hackeando apenas a renderização dos componentes na tela do estudante.
+
+**Vantagens do Modo Atual:**
+- **Invisível e Perfeito:** Injeta uma estilização CSS (Degradê Animado) suave.
+- **Auto-Resposta Dinâmica:** Como um opcional apenas desse modo, após aplicar o destaque verde na interface de resposta certa nos questionários nativos (`DescoQuestions`), você pode optar por permitir a "Auto-Confirmação", fazendo a Extensão simular cliques contínuos pra você ("Responder" e "Próxima") engatando a marcha automática sobre as lições para otimização de tempo.
+- **Design Pattern:** Utiliza arquitetura Limpa e Isolada (_Strategy Factory_) cobrindo nativamente e sem quebras visuais 4 tipos de cenários Descomplica: `DescoQuestions` (Exercícios da aula), `RevisionQuestion` (Listas de Revisão), `ObjectiveTrivia` (Fixações Extras) e `ClozeQuestion` (Questões Lacunares de múltiplas opões de seleção Dropdown).
+
+### 🕰️ V1 - XHR Network (Legacy)
+O projeto inicial mais antigo de Interceptação Fina de Requisições. Ele opera na etapa antes de qualquer interface, bloqueando e ouvindo o motor do _Fetch/XHR API_ para o sub-domínio das URLs do servidor Descomplica.
+
+**Vantagens da V1:**
+- Escaneia requisições GraphQl via Injeção Raw DOM antes do script interno agir, e emite log rico detalhado para os Consoles. Confiável se houver profundas mudanças estruturais na interface do VueJS para o qual as Tags da V2 percam total aderência no futuro!
+
+---
